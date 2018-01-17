@@ -1,0 +1,122 @@
+spring :
+    application :
+         admin.enabled : true #MBeanServer
+    datasource :
+         driver-class-name : com.mysql.jdbc.Driver
+         url : jdbc:mysql://localhost:3306/webseed?useUnicode=true&characterEncoding=utf8&useSSL=false
+         username : root
+         password : #jiazhongjin
+         #driver-class-name : org.h2.Driver
+         #url : jdbc:h2:file:C:/h2data/webseed
+         #username : sa
+         #password :
+         tomcat : 
+              max-wait : 30000  # tomcat pool , Number of ms to wait before throwing an exception if no connection is available.
+              max-idle : 15
+              max-active : 50 # Maximum number of active connections that can be allocated from this pool at the same time.
+              test-on-borrow : true # Validate the connection before borrowing it from the pool.
+              validation-query : select 1
+    jpa : 
+         generate-ddl : true
+         show-sql : true
+         properties :
+              hibernate :
+                   show_sql : true
+                   dialect : me.libme.module.spring.jpahibernate._hibernate.mysql.MySQLServerDialect
+                   #dialect : org.hibernate.dialect.H2Dialect
+    cache :
+         ehcache : 
+              config : classpath:ehcache.xml
+    http :
+         multipart :
+              enabled : true
+              max-file-size : 3Mb
+              max-request-size : 10Mb 
+              resolve-lazily : false
+    redis :
+         host : 192.168.1.51
+         port : 6379
+         pool.max-idle : 8
+         pool.min-idle : 0
+         pool.max-active : 8
+         pool.max-wait : -1
+    data :
+         mongodb :
+              uri : mongodb://192.168.252.4:27017/seeddb
+server : 
+    port : 8989 #8989
+    context-path : /api
+    tomcat :
+         uri-encoding : UTF-8
+management : 
+    security.enabled : false
+logging:
+    level:
+         com.kcfy : DEBUG
+         #org.springframework: DEBUG
+    
+cpp : 
+    name : webseed
+    security-key : _you_@never@_known@aha_3cgg@163.com_
+    auth.authentication : true
+    auth.authorization : true
+    jwt :
+         secret : jiazhongjin
+         expiration : 3600000000 #milliseconds  ; long long time , only for developing
+         header : _token
+    ehcache :
+         name : dev
+    redis : 
+         expired-time : 120  #seconds
+         redis-off-proxy : true
+    thread : 
+         name : ''
+         alive-count : 3
+         max-count : 9
+         alive-time : 3600 # seconds
+    es5x6 :
+         addresses : {"[192.168.93.128]" : 9200}
+         headers : {"es-request-indicator" : J}
+         userName : elastic
+         password : changeme
+         timeout : 90 # seconds
+    mongo :
+         primary-key : uniqueId
+         deleted-key : deleted
+         invalid-Keys :
+              - _id
+              - id
+              - _class
+              - class
+    user :
+         default-password : 11111
+    file : 
+         dsk-path : D:/file-store/   #simple file directory
+         host : http://localhost/ #IP地址 指定文件存储的地址
+    temp-file :
+         temp-dsk-path : D:/temp-file-store/   #simple file directory
+         temp-host : http://localhost:9898/ #IP地址 指定文件存储的地址
+    url :
+         method-track-switch : true #true is on , false is off
+    kaptcha :
+         enable : true
+         header-key : _kaptcha_key
+         header-value : _kaptcha_value
+         expired-time : 60  #second
+    mock :
+         enable : true
+         header-key : _mock_enable
+    cors :
+         origins :
+              - "*"
+    jpa :
+         repoPackages :
+              - me.libme  # never set *
+              - me.libme
+    ueditor :
+         root-path : D:/file-store-ueditor/   #simple file directory
+         host : http://localhost:8901/ #IP地址 指定文件存储的地址
+    
+    
+    
+    
