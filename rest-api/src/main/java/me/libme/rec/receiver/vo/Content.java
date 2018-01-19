@@ -1,9 +1,11 @@
 package me.libme.rec.receiver.vo;
 
+import me.libme.kernel._c._m.JModel;
+
 /**
  * Created by J on 2018/1/17.
  */
-public class Content {
+public class Content implements JModel {
 
     private String desc;
 

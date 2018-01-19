@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by J on 2018/1/17.
  */
-public abstract class Event {
+public class Event {
 
     private String source;
 

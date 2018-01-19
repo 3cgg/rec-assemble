@@ -7,7 +7,10 @@ import me.libme.webseed.Application;
  */
 public class RecApplication {
 
+    public static String[] args;
+
     public static void main(String[] args) throws Exception {
+        RecApplication.args=args;
         Application.main(args);
     }
 

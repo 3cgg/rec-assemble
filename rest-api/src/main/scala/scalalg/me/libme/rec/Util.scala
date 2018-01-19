@@ -12,13 +12,14 @@ import scalalg.me.libme.module.zookeeper.ZooKeeperCliParam
   */
 object Util {
 
-  var zkExecutor:ZooKeeperConnector#ZookeeperExecutor=null
+  private[this] var zkExecutor:ZooKeeperConnector#ZookeeperExecutor=null
 
 
   def zookeeper(cliParams: CliParams*): ZooKeeperConnector#ZookeeperExecutor =synchronized{
 
     if(zkExecutor==null){
       val zooKeeperConfig = new ZooKeeperConfig
+
       zooKeeperConfig.setConnectString(ZooKeeperCliParam.connectString(cliParams(0)))
       zooKeeperConfig.setNamespace(ZooKeeperCliParam.namespace(cliParams(0)))
 
@@ -27,7 +28,7 @@ object Util {
     return zkExecutor
   }
 
-  var hbaseExecutor:HBaseConnector#HBaseExecutor=null
+  private[this] var hbaseExecutor:HBaseConnector#HBaseExecutor=null
 
 
   def hbase(cliParams: CliParams*): HBaseConnector#HBaseExecutor =synchronized{
@@ -42,12 +43,18 @@ object Util {
   }
 
 
-  var producerExecutor:ProducerConnector#ProducerExecutor[String,String]=null
+  private[this] var producerExecutor:ProducerConnector#ProducerExecutor[String,String]=null
 
   def producerExecutor(cliParams: CliParams*): ProducerConnector#ProducerExecutor[String,String] =synchronized{
 
-    if(hbaseExecutor==null){
-      val kafkaProducerConfig=new KafkaProducerConfig
+    if(producerExecutor==null){
+
+      val conf=KafkaProducerConfig.`def`();
+
+      conf.put("bootstrap.servers",cliParams(0).getString("bootstrap.servers"))
+      conf.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer")
+
+      val kafkaProducerConfig=KafkaProducerConfig.build(conf)
       val producerConnecter = new ProducerConnector(kafkaProducerConfig)
       producerExecutor = producerConnecter.connect[String,String]()
 

@@ -69,6 +69,13 @@
             <version>2.11_1.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>libme.modules</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+
 
 
     </dependencies>

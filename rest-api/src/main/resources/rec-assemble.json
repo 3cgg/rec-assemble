@@ -1,0 +1,17 @@
+{
+
+  "--zk.namespace":"rec-system",
+  "--zk.connectString":"one.3cgg.rec",
+
+
+  "--rec.eval.count.click":10,
+  "--rec.eval.count.browser":5,
+
+  "bootstrap.servers":"one.3cgg.rec",
+  "value.serializer":"org.apache.kafka.common.serialization.StringSerializer",
+
+  "--hbase.zk.connectString":"one.3cgg.rec"
+
+
+
+}
