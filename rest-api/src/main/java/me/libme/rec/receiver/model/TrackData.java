@@ -1,4 +1,4 @@
-package me.libme.rec.receiver.vo;
+package me.libme.rec.receiver.model;
 
 import me.libme.kernel._c._m.JModel;
 import me.libme.kernel._c.json.JJSONObject;

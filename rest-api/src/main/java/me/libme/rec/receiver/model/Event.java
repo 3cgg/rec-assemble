@@ -1,4 +1,4 @@
-package me.libme.rec.receiver.vo;
+package me.libme.rec.receiver.model;
 
 import java.util.Date;
 

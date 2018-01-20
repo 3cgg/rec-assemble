@@ -2,7 +2,7 @@ package scalalg.me.libme.rec
 
 import me.libme.kernel._c.json.JJSON
 import me.libme.module.kafka.SimpleProducer
-import me.libme.rec.receiver.vo.TrackData
+import me.libme.rec.receiver.model.TrackData
 import me.libme.xstream.{Compositer, FlexTupe, Tupe}
 
 /**

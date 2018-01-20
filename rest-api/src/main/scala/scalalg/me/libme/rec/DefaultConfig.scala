@@ -1,5 +1,5 @@
 package scalalg.me.libme.rec
-import me.libme.rec.receiver.vo.{EventType, TrackData}
+import me.libme.rec.receiver.model.{EventType, TrackData}
 
 /**
   * Created by J on 2018/1/19.
