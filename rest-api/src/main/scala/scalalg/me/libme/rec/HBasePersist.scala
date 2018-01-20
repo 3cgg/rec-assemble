@@ -56,8 +56,10 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
 
 
     // get the original rating
-    val oneRating:Double=Some(executor.columnOperations.get(tableName,columnFamily,column,row))
-          .getOrElse("0").toDouble
+    val oneRating:Double=Option(executor.columnOperations.get(tableName,columnFamily,column,row)) match {
+      case Some(v) =>v.toDouble
+      case None => 0
+    }
     val evalVal=countEval.eval(data)
     val finalVal=algorithm.cal(oneRating,oneRating+evalVal)
 
@@ -68,7 +70,9 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
 
   }
 
-  override def complete(tupe: Tupe): Unit = ???
+  override def complete(tupe: Tupe): Unit = {
+
+  }
 
 
 

@@ -12,8 +12,8 @@
 
     <groupId>me.libme.rec.rest</groupId>
     <artifactId>rest-api</artifactId>
-    <packaging>jzooar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <version>1.0.1</version>
 
     <name>Rest API for Recommender System</name>
 

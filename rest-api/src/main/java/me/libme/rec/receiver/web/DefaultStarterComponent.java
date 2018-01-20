@@ -22,9 +22,11 @@ import org.springframework.stereotype.Component;
 @Conditional({DefaultStarterComponent._DefaultStarterCondition.class})
 public class DefaultStarterComponent implements ApplicationListener<ContextRefreshedEvent> {
 
+    private Logger logger=LoggerFactory.getLogger(DefaultStarterComponent.class);
+
 
     public DefaultStarterComponent() {
-        System.out.println("Construct "+this.getClass());
+        logger.info("Construct "+this.getClass());
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultStarterComponent.class);
@@ -33,8 +35,10 @@ public class DefaultStarterComponent implements ApplicationListener<ContextRefre
 
     public static class _DefaultStarterCondition implements Condition {
 
+        private Logger logger=LoggerFactory.getLogger(_DefaultStarterCondition.class);
+
         public _DefaultStarterCondition() {
-            System.out.println("Construct "+this.getClass());
+            logger.info("Construct "+this.getClass());
         }
 
         @Override

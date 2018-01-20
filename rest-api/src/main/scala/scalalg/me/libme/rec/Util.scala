@@ -4,6 +4,7 @@ import me.libme.kernel._c.util.CliParams
 import me.libme.module.kafka.{KafkaProducerConfig, ProducerConnector}
 import me.libme.module.zookeeper.{ZooKeeperConfig, ZooKeeperConnector}
 
+import scala.collection.{JavaConversions, mutable}
 import scalalg.me.libme.module.hbase.{HBaseCliParam, HBaseConfig, HBaseConnector}
 import scalalg.me.libme.module.zookeeper.ZooKeeperCliParam
 
@@ -45,16 +46,20 @@ object Util {
 
   private[this] var producerExecutor:ProducerConnector#ProducerExecutor[String,String]=null
 
-  def producerExecutor(cliParams: CliParams*): ProducerConnector#ProducerExecutor[String,String] =synchronized{
+  def producerExecutor(_cliParams: CliParams*): ProducerConnector#ProducerExecutor[String,String] =synchronized{
 
     if(producerExecutor==null){
 
+      var cliParams:CliParams=_cliParams(0)
       val conf=KafkaProducerConfig.`def`();
+      JavaConversions.mapAsScalaMap(conf)
+        .foreach(entry=>{
+          if(!cliParams.contains(entry._1)){
+            cliParams=cliParams.append(entry._1,entry._2.toString)
+          }
+        })
 
-      conf.put("bootstrap.servers",cliParams(0).getString("bootstrap.servers"))
-      conf.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer")
-
-      val kafkaProducerConfig=KafkaProducerConfig.build(conf)
+      val kafkaProducerConfig=KafkaProducerConfig.build(cliParams.toMap)
       val producerConnecter = new ProducerConnector(kafkaProducerConfig)
       producerExecutor = producerConnecter.connect[String,String]()
 

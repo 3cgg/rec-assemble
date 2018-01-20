@@ -44,7 +44,7 @@ public class TrackData implements JModel ,JJSONObject {
     @Override
     public Object serializableJSONObject() {
         String _data=
-                event.getType().name()+","+event.getTime()+","+event.getSource()
+                event.getType().name()+","+event.getTime().getTime()+","+event.getSource()
                 +"|"+userItemRecord.getUserId()+","+userItemRecord.getItemId()
                 +"|"+content.getDesc()+","+content.getData();
         return _data;

@@ -7,8 +7,11 @@
   "--rec.eval.count.click":10,
   "--rec.eval.count.browser":5,
 
-  "bootstrap.servers":"one.3cgg.rec",
+  "bootstrap.servers":"one.3cgg.rec:9092",
+  "key.serializer":"org.apache.kafka.common.serialization.StringSerializer",
   "value.serializer":"org.apache.kafka.common.serialization.StringSerializer",
+  "value.deserializer":"org.apache.kafka.common.serialization.StringDeserializer",
+
 
   "--hbase.zk.connectString":"one.3cgg.rec"
 

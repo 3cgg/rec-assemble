@@ -56,7 +56,9 @@ class kafkaPersist(producer :SimpleProducer, topicMatch: TopicMatch) extends Com
 
   }
 
-  override def complete(tupe: Tupe): Unit = ???
+  override def complete(tupe: Tupe): Unit = {
+
+  }
 
 
 

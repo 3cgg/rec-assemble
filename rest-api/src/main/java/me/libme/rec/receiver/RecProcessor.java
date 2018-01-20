@@ -42,7 +42,7 @@ public class RecProcessor {
         CliParams cliParams=new CliParams(recProcessorBuilder.args);
         for(Map.Entry<String,Object> entry:config.entrySet()){
             if(!cliParams.contains(entry.getKey())){
-                cliParams=cliParams.append(entry.getKey(), String.valueOf(Optional.of(entry.getValue()).orElseGet(()->"")));
+                cliParams=cliParams.append(entry.getKey(), entry.getValue());
             }
         }
 
