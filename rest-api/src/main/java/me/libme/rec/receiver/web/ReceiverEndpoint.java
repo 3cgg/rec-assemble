@@ -26,7 +26,7 @@ public class ReceiverEndpoint {
     private QueueHolder queueHolder;
 
     @ResponseBody
-    @RequestMapping(path="/message",method= RequestMethod.POST)
+    @RequestMapping(path="/message",method= {RequestMethod.GET,RequestMethod.POST})
     public ResponseModel message (Event event, UserItemRecord userItemRecord, Content content) throws Exception {
         // do something validation on the contentRecord.
 
