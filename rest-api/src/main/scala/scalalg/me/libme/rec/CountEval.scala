@@ -7,6 +7,6 @@ import me.libme.rec.receiver.model.TrackData
   */
 trait CountEval {
 
-  def eval(trackData: TrackData): Int
+  def eval(trackData: TrackData): Double
 
 }

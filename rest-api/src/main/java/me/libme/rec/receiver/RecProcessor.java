@@ -36,8 +36,7 @@ public class RecProcessor {
         QueueWindowSourcer queueWindowSourcer=new QueueWindowSourcer(recProcessorBuilder.queueHolder.queue());
 
 
-        Map<String,Object> config= JJSON.get().parse(JStringUtils.utf8(
-                JIOUtils.getBytes(Thread.currentThread().getContextClassLoader().getResourceAsStream("rec-assemble.json"))));
+        Map<String,Object> config= RecConfig$.MODULE$.backend();
 
         CliParams cliParams=new CliParams(recProcessorBuilder.args);
         for(Map.Entry<String,Object> entry:config.entrySet()){
@@ -65,7 +64,7 @@ public class RecProcessor {
 
         kafkaPersist kafkaPersist=new kafkaPersist(simpleProducer,topicMatch);
 
-        HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Sqrt$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
+        HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Plus$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
                 DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$);
 
 

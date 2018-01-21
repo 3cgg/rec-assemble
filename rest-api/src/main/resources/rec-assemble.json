@@ -4,8 +4,10 @@
   "--zk.connectString":"one.3cgg.rec",
 
 
-  "--rec.eval.count.click":10,
-  "--rec.eval.count.browser":5,
+  "--rec.eval.count.click":1,
+  "--rec.eval.count.browser":0.3,
+  "--rec.table.name":"userItem",
+  "--rec.table.column.family":"item",
 
   "bootstrap.servers":"one.3cgg.rec:9092",
   "key.serializer":"org.apache.kafka.common.serialization.StringSerializer",

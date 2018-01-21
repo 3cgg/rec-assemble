@@ -8,26 +8,26 @@ object DefaultConfig {
 
 
   object _TableMatch extends TableMatch{
-    override def matches(trackData: TrackData): String = "userItem"
+    override def matches(trackData: TrackData): String =String.valueOf(RecConfig.get("--rec.table.name"))
   }
 
   object _ColumnFamilyMatch extends ColumnFamilyMatch{
-    override def matches(trackData: TrackData): String = "item"
+    override def matches(trackData: TrackData): String =String.valueOf(RecConfig.get("--rec.table.column.family"))
   }
 
   object _CountEval extends CountEval{
-    override def eval(trackData: TrackData): Int = {
+    override def eval(trackData: TrackData): Double = {
 
       val eventType=trackData.getEvent.getType
 
-      var count:Int=0
+      var count:Double=0
       eventType match {
 
         case EventType.click =>{
-          count=10
+          count=String.valueOf(RecConfig.get("--rec.eval.count.click")).toDouble
         }
         case EventType.browser =>{
-          count=5
+          count=String.valueOf(RecConfig.get("--rec.eval.count.browser")).toDouble
         }
       }
       return count
