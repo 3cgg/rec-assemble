@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.libme.rec.spark</groupId>
+    <artifactId>rec-api</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.1</version>
+
+    <name>Spark ML Based Recommender</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+
+    <dependencies>
+
+        <!-- scala -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.8</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scala-lang/scala-compiler -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-compiler</artifactId>
+            <version>2.11.8</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
+            <version>2.2.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>libme</groupId>
+            <artifactId>lib-kernel</artifactId>
+            <version>1.0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase-client -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>1.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.10</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/scala</source>
+                                <source>src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- the Maven Scala plugin will compile Scala source files -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>compile-scala</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile-scala</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- the Maven compiler plugin will compile Java source files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!-- configure the eclipse plugin to generate eclipse project descriptors for a Scala project -->
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-eclipse-plugin</artifactId>-->
+            <!--<version>2.10</version>-->
+            <!--<configuration>-->
+            <!--<projectnatures>-->
+            <!--<projectnature>org.scala-ide.sdt.core.scalanature</projectnature>-->
+            <!--<projectnature>org.eclipse.jdt.core.javanature</projectnature>-->
+            <!--</projectnatures>-->
+            <!--<buildcommands>-->
+            <!--<buildcommand>org.scala-ide.sdt.core.scalabuilder</buildcommand>-->
+            <!--</buildcommands>-->
+            <!--<classpathContainers>-->
+            <!--<classpathContainer>org.scala-ide.sdt.launching.SCALA_CONTAINER</classpathContainer>-->
+            <!--<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>-->
+            <!--</classpathContainers>-->
+            <!--<excludes>-->
+            <!--<exclude>org.scala-lang:scala-library</exclude>-->
+            <!--<exclude>org.scala-lang:scala-compiler</exclude>-->
+            <!--</excludes>-->
+            <!--<sourceIncludes>-->
+            <!--<sourceInclude>**/*.scala</sourceInclude>-->
+            <!--<sourceInclude>**/*.java</sourceInclude>-->
+            <!--</sourceIncludes>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+
+        </plugins>
+    </build>
+
+</project>

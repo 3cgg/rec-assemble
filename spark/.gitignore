@@ -1,0 +1,13 @@
+.settings/
+*/settings/
+*/target/
+.classpath
+*/bin/
+*.iml
+.idea/
+/bin/
+.project
+*/target/*
+target/*
+/target/
+rebel.xml
