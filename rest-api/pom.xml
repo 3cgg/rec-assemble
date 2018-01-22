@@ -197,20 +197,20 @@
             <!--</configuration>-->
             <!--</plugin>-->
 
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>me.libme.webseed.Application</mainClass>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>repackage</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<mainClass>me.libme.rec.RecApplication</mainClass>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>

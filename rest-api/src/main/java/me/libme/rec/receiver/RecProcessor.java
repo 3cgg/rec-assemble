@@ -1,21 +1,19 @@
 package me.libme.rec.receiver;
 
-import me.libme.kernel._c.json.JJSON;
 import me.libme.kernel._c.util.CliParams;
-import me.libme.kernel._c.util.JIOUtils;
-import me.libme.kernel._c.util.JStringUtils;
 import me.libme.module.kafka.ProducerConnector;
 import me.libme.module.kafka.SimpleProducer;
 import me.libme.module.zookeeper.ZooKeeperConnector;
-import me.libme.xstream.Consumer;
-import me.libme.xstream.QueueWindowSourcer;
-import me.libme.xstream.WindowTopology;
+import me.libme.xstream.*;
 import scala.collection.JavaConversions;
 import scala.collection.mutable.Buffer;
 import scalalg.me.libme.module.hbase.HBaseConnector;
 import scalalg.me.libme.rec.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by J on 2018/1/20.
@@ -60,22 +58,25 @@ public class RecProcessor {
 
         SimpleProducer simpleProducer=new SimpleProducer(producerExecutor);
 
-        TopicMatch topicMatch=recProcessorBuilder.topicMatch;
-
-        kafkaPersist kafkaPersist=new kafkaPersist(simpleProducer,topicMatch);
-
-        HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Plus$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
-                DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$);
-
-
         WindowTopology.WindowBuilder windowBuilder=WindowTopology.builder().setName("Track Data Topology")
                 .setCount(recProcessorBuilder.count)
                 .setTime(recProcessorBuilder.time)
-                .setSourcer(queueWindowSourcer)
-                .addConsumer(kafkaPersist)
-                .addConsumer(hBasePersist);
-        for(ConsumerProider consumerProider:recProcessorBuilder.consumerProiders){
-            windowBuilder.addConsumer(consumerProider.provide(zookeeperExecutor,producerExecutor,hbaseExecutor));
+                .setSourcer(queueWindowSourcer);
+
+        if(recProcessorBuilder.persistKafka) {
+            TopicMatch topicMatch=recProcessorBuilder.topicMatch;
+            kafkaPersist kafkaPersist = new kafkaPersist(simpleProducer, topicMatch);
+            windowBuilder.addConsumer(kafkaPersist);
+        }
+
+        if(recProcessorBuilder.persistHbase){
+            HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Plus$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
+                    DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$);
+            windowBuilder.addConsumer(hBasePersist);
+        }
+
+        for(OperationProvider operationProvider:recProcessorBuilder.operationProviders){
+            windowBuilder.addOperation(operationProvider.provide(zookeeperExecutor,producerExecutor,hbaseExecutor));
         }
 
         windowBuilder.build().start();
@@ -87,7 +88,7 @@ public class RecProcessor {
 
         private QueueHolder queueHolder;
 
-        private List<ConsumerProider> consumerProiders=new ArrayList<>();
+        private List<OperationProvider> operationProviders=new ArrayList<>();
 
         private String[] args=new String[]{};
 
@@ -96,6 +97,10 @@ public class RecProcessor {
         private int time=1*1000; //millisecond
 
         private TopicMatch topicMatch=trackData->"rec-system";
+
+        boolean persistKafka=true;
+
+        boolean persistHbase=true;
 
         public RecProcessorBuilder setQueueHolder(QueueHolder queueHolder) {
             this.queueHolder = queueHolder;
@@ -123,7 +128,23 @@ public class RecProcessor {
         }
 
         public RecProcessorBuilder addConsumerProider(ConsumerProider consumerProider){
-            consumerProiders.add(consumerProider);
+            operationProviders.add(consumerProider);
+            return this;
+        }
+
+        public RecProcessorBuilder addFilterProider(FilterProider filterProider){
+            operationProviders.add(filterProider);
+            return this;
+        }
+
+
+        public RecProcessorBuilder setPersistKafka(boolean persistKafka) {
+            this.persistKafka = persistKafka;
+            return this;
+        }
+
+        public RecProcessorBuilder setPersistHbase(boolean persistHbase) {
+            this.persistHbase = persistHbase;
             return this;
         }
 
@@ -136,11 +157,19 @@ public class RecProcessor {
 
     }
 
-    public interface ConsumerProider{
+    public interface OperationProvider<T extends Operation>{
 
-        Consumer provide(ZooKeeperConnector.ZookeeperExecutor zookeeperExecutor,
-                         ProducerConnector.ProducerExecutor producerExecutor,
-                         HBaseConnector.HBaseExecutor hbaseExecutor);
+        T provide(ZooKeeperConnector.ZookeeperExecutor zookeeperExecutor,
+                  ProducerConnector.ProducerExecutor producerExecutor,
+                  HBaseConnector.HBaseExecutor hbaseExecutor);
+
+    }
+
+    public interface ConsumerProider extends OperationProvider<Consumer>{
+
+    }
+
+    public interface FilterProider extends OperationProvider<Filter>{
 
     }
 

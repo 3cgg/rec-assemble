@@ -116,6 +116,8 @@ cpp :
     ueditor :
          root-path : D:/file-store-ueditor/   #simple file directory
          host : http://localhost:8901/ #IP地址 指定文件存储的地址
+    rec:
+        default.starter.switch : true
     
     
     
