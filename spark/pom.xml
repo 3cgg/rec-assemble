@@ -47,7 +47,7 @@
         <dependency>
             <groupId>libme</groupId>
             <artifactId>lib-kernel</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
