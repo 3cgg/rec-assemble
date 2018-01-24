@@ -3,6 +3,8 @@
   */
 package scala.me.libme.recsystem.ml
 
+import org.apache.hadoop.hbase.HBaseConfiguration
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.recommendation.ALS
 import org.apache.spark.sql.SparkSession
@@ -83,17 +85,37 @@ object AlsScript {
 //    }
 
     // the Spark Session may be created before anything
-    val spark = SparkSession
-      .builder()
-      .master("local")
-      .appName("Spark SQL basic example")
-      .getOrCreate()
+//    val spark = SparkSession
+//      .builder()
+//      .master("local")
+//      .appName("Spark SQL basic example")
+//      .getOrCreate()
 
     // first import data from file as testing , all data should be loaded from HBase later
-    val ratings = new FileRatingDataset()
-      .filePath("D:\\java_\\spark-2.2.1-bin-hadoop2.7/data/mllib/als/sample_movielens_ratings.txt")
-      .ratingDataset()
+//    val ratings = new FileRatingDataset()
+//      .filePath("D:\\java_\\spark-2.2.1-bin-hadoop2.7/data/mllib/als/sample_movielens_ratings.txt")
+//      .ratingDataset()
 
+    val sparkConf = new SparkConf().setAppName("HBaseTest").setMaster("local")
+      .set("spark.hadoop.validateOutputSpecs","false")
+    val sc = new SparkContext(sparkConf)
+
+    //hbase
+    val hbaseConf = HBaseConfiguration.create()
+
+    hbaseConf.set("hbase.zookeeper.quorum","one.3cgg.rec")
+    hbaseConf.set("hbase.zookeeper.property.clientPort", "2181")
+
+    // the Spark Session may be created before anything
+    val spark = SparkSession
+      .builder()
+      .config(sparkConf)
+      .getOrCreate()
+
+
+
+
+    val ratings=new HBaseDataset("userItem",sparkConf,hbaseConf) ratingDataset
 
     val Array(training, test) = ratings.randomSplit(Array(0.8, 0.2))
 

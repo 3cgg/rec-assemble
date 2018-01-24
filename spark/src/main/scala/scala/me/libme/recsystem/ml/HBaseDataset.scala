@@ -5,7 +5,9 @@ import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.broadcast.Broadcast
+import org.apache.spark.sql.types.{DataTypes, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 import scala.collection.JavaConversions
 
@@ -26,31 +28,36 @@ class HBaseDataset(tableName:String,sparkConf: SparkConf,hbaseConf: Configuratio
 
     val job = Job.getInstance(jobConf)
 
-    val rows=new java.util.ArrayList[Rating]
+    val broadcastRows:Broadcast[java.util.ArrayList[Row]]=spark.sparkContext.broadcast(new java.util.ArrayList[Row])
+
 
     val userItemRDD = spark.sparkContext.newAPIHadoopRDD(job.getConfiguration, classOf[TableInputFormat],
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    userItemRDD.map{ case (_,result) =>
-      val key = Bytes.toInt(result.getRow)
+    val count = userItemRDD.count()
+    println("userItemRDD RDD Count:" + count)
+    userItemRDD.cache()
 
-      JavaConversions.mapAsScalaMap(result.getFamilyMap(Bytes.toBytes("userItem")))
-            .map(entry=>{
+    userItemRDD.foreach{ case (_,result) =>
+      val key = Bytes.toString(result.getRow).toInt
+
+      JavaConversions.mapAsScalaMap(result.getFamilyMap(Bytes.toBytes("item")))
+            .foreach{case (cf,value)=>{
 //              Row(key,Bytes.toInt(entry._1),Bytes.toFloat(entry._2),System.currentTimeMillis())
-              val rating=Rating(key,Bytes.toInt(entry._1),Bytes.toFloat(entry._2),System.currentTimeMillis());
-              rows.add(rating)
-            })
+                val rating=Row(key,Bytes.toString(cf).toInt,
+                Bytes.toString(value).toFloat, System.currentTimeMillis().toInt);
+                broadcastRows.value.add(rating)
+            }}
     }
 
-//    val schema = StructType(Array(StructField("userId", DataTypes.IntegerType),
-//      StructField("itemId", DataTypes.IntegerType),
-//      StructField("rating", DataTypes.FloatType),
-//      StructField("itemId", DataTypes.IntegerType),
-//      StructField("itemId", DataTypes.LongType)
-//    ))
+    val schema = StructType(Array(StructField("userId", DataTypes.IntegerType),
+      StructField("itemId", DataTypes.IntegerType),
+      StructField("rating", DataTypes.FloatType),
+      StructField("timestamp", DataTypes.IntegerType)
+    ))
 
-    return sqlContext.createDataFrame(rows,classOf[Rating])
+    return sqlContext.createDataFrame(broadcastRows.value,schema)
 
 
 
