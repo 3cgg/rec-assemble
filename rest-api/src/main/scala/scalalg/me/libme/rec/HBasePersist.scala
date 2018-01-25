@@ -66,7 +66,7 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
     oneRating.setRating(finalVal)
 
     //calculate the final original rating
-    executor.columnOperations.insert(tableName,columnFamily,column,row,JJSON.get().format(finalVal))
+    executor.columnOperations.insert(tableName,columnFamily,column,row,JJSON.get().format(oneRating))
 
     produce(data)
 

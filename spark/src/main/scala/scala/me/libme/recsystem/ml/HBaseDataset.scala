@@ -1,4 +1,6 @@
 package scala.me.libme.recsystem.ml
+import me.libme.kernel._c.json.JJSON
+import me.libme.recsystem.ml.CellData
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.mapreduce.{TableInputFormat, TableOutputFormat}
 import org.apache.hadoop.hbase.util.Bytes
@@ -45,8 +47,11 @@ class HBaseDataset(tableName:String,sparkConf: SparkConf,hbaseConf: Configuratio
       JavaConversions.mapAsScalaMap(result.getFamilyMap(Bytes.toBytes("item")))
             .foreach{case (cf,value)=>{
 //              Row(key,Bytes.toInt(entry._1),Bytes.toFloat(entry._2),System.currentTimeMillis())
+
+                val cellData:CellData=JJSON.get().parse(Bytes.toString(value),classOf[CellData])
+
                 val rating=Row(key,Bytes.toString(cf).toInt,
-                Bytes.toString(value).toFloat, System.currentTimeMillis().toInt);
+                  cellData.getRating.toFloat, cellData.getTimestamp);
                 broadcastRows.value.add(rating)
             }}
     }
@@ -54,7 +59,7 @@ class HBaseDataset(tableName:String,sparkConf: SparkConf,hbaseConf: Configuratio
     val schema = StructType(Array(StructField("userId", DataTypes.IntegerType),
       StructField("itemId", DataTypes.IntegerType),
       StructField("rating", DataTypes.FloatType),
-      StructField("timestamp", DataTypes.IntegerType)
+      StructField("timestamp", DataTypes.LongType)
     ))
 
     return sqlContext.createDataFrame(broadcastRows.value,schema)

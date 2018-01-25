@@ -98,6 +98,8 @@ object AlsScript {
 
     val sparkConf = new SparkConf().setAppName("HBaseTest").setMaster("local")
       .set("spark.hadoop.validateOutputSpecs","false")
+      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+
     val sc = new SparkContext(sparkConf)
 
     //hbase
@@ -143,18 +145,20 @@ object AlsScript {
     // Generate top 10 movie recommendations for each user
     val userRecs = model.recommendForAllUsers(10)
     // Generate top 10 user recommendations for each movie
-    val movieRecs = model.recommendForAllItems(10)
+//    val movieRecs = model.recommendForAllItems(10)
 
 //    new FileWriter().write(userRecs)
     // output the data as case class
     val uis=new CaseClassOutput().write(userRecs)
 
     // persist case class for front use , replace by redis implementation later
-    new FilePersist().persist(JavaConversions.bufferAsJavaList(uis))
+//    new FilePersist().persist(JavaConversions.bufferAsJavaList(uis))
+
+    new HBasePersist("userItemRatingTop",sparkConf,hbaseConf).persist(JavaConversions.bufferAsJavaList(uis))
 
 //    new FileWriter().write(movieRecs)
 
-    println("End")
+    println("============================ ALL End!=================================")
   }
 
 }
