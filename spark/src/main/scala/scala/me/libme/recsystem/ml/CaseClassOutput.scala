@@ -25,7 +25,7 @@ case class UserItemStruct(userId:Int,itemRatings:ArrayBuffer[UserItemRating]){
   */
 class CaseClassOutput extends RowOutput[ArrayBuffer[UserItemStruct]]{
 
-  var count:Int=10
+  var count:Int=9000
 
   def appendChar(str: String):Unit={
 
