@@ -5,7 +5,7 @@ import me.libme.kernel._c._m.JModel;
 /**
  * Created by J on 2018/1/24.
  */
-public class Rating implements JModel {
+public class CellData implements JModel {
 
     private Double rating;
 
@@ -27,8 +27,8 @@ public class Rating implements JModel {
         this.timestamp = timestamp;
     }
 
-    public static Rating _default(){
-        Rating rating=new Rating();
+    public static CellData _default(){
+        CellData rating=new CellData();
         rating.rating=0d;
         rating.timestamp=System.currentTimeMillis();
         return rating;

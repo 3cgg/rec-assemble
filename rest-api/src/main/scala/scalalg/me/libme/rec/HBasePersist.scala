@@ -1,7 +1,7 @@
 package scalalg.me.libme.rec
 
 import me.libme.kernel._c.json.JJSON
-import me.libme.rec.receiver.model.{Rating, TrackData}
+import me.libme.rec.receiver.model.{CellData, TrackData}
 import me.libme.xstream.{Compositer, FlexTupe, Tupe}
 
 import scalalg.me.libme.module.hbase.HBaseConnector
@@ -57,9 +57,9 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
 
 
     // get the original rating
-    val oneRating:Rating=Option(executor.columnOperations.get(tableName,columnFamily,column,row)) match {
-      case Some(v) =>JJSON.get().parse(v,classOf[Rating])
-      case None => Rating._default()
+    val oneRating:CellData=Option(executor.columnOperations.get(tableName,columnFamily,column,row)) match {
+      case Some(v) =>JJSON.get().parse(v,classOf[CellData])
+      case None => CellData._default()
     }
     val evalVal=countEval.eval(data)
     val finalVal=algorithm.cal(oneRating.getRating,oneRating.getRating+evalVal)
