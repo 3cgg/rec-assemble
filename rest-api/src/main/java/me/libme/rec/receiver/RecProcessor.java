@@ -1,19 +1,14 @@
 package me.libme.rec.receiver;
 
-import me.libme.kernel._c.util.CliParams;
 import me.libme.module.kafka.ProducerConnector;
 import me.libme.module.kafka.SimpleProducer;
 import me.libme.module.zookeeper.ZooKeeperConnector;
 import me.libme.xstream.*;
-import scala.collection.JavaConversions;
-import scala.collection.mutable.Buffer;
 import scalalg.me.libme.module.hbase.HBaseConnector;
 import scalalg.me.libme.rec.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by J on 2018/1/20.
@@ -33,27 +28,17 @@ public class RecProcessor {
 
         QueueWindowSourcer queueWindowSourcer=new QueueWindowSourcer(recProcessorBuilder.queueHolder.queue());
 
+        RecRuntime recRuntime=RecRuntime.builder().args(recProcessorBuilder.args).getOrCreate();
 
-        Map<String,Object> config= RecConfig$.MODULE$.backend();
-
-        CliParams cliParams=new CliParams(recProcessorBuilder.args);
-        for(Map.Entry<String,Object> entry:config.entrySet()){
-            if(!cliParams.contains(entry.getKey())){
-                cliParams=cliParams.append(entry.getKey(), entry.getValue());
-            }
-        }
-
-
-        Buffer buffer= JavaConversions.asScalaBuffer(Arrays.asList(cliParams));
 
         //kafka
-        ProducerConnector.ProducerExecutor producerExecutor= Util.producerExecutor(buffer);
+        ProducerConnector.ProducerExecutor producerExecutor= recRuntime.producerExecutor().get();
 
         //zookeeper
-        ZooKeeperConnector.ZookeeperExecutor zookeeperExecutor=Util.zookeeper(buffer);
+        ZooKeeperConnector.ZookeeperExecutor zookeeperExecutor=recRuntime.zookeeperExecutor().get();
 
         //hbase
-        HBaseConnector.HBaseExecutor hbaseExecutor=Util.hbase(buffer);
+        HBaseConnector.HBaseExecutor hbaseExecutor=recRuntime.hbaseExecutor().get();
 
 
         SimpleProducer simpleProducer=new SimpleProducer(producerExecutor);

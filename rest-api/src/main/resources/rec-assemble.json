@@ -1,5 +1,7 @@
 {
 
+  "--rec.cluster":true,
+
   "--zk.namespace":"rec-system",
   "--zk.connectString":"one.3cgg.rec",
 
@@ -15,8 +17,9 @@
   "value.deserializer":"org.apache.kafka.common.serialization.StringDeserializer",
 
 
-  "--hbase.zk.connectString":"one.3cgg.rec"
+  "--hbase.zk.connectString":"one.3cgg.rec",
 
 
-
+  "--rec.netty.host":"127.0.0.1",
+  "--rec.netty.port":10089
 }

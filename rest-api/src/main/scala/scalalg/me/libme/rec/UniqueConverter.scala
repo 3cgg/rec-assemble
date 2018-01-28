@@ -47,9 +47,9 @@ class UniqueConverter extends Compositer{
       data= classOf[TrackData].cast(tupe.next())
     }
 
-    val topic=topicMatch.matches(data)
-    val string=JJSON.get().formatJSONObject(data);
-    producer.send(string,topic)
+//    val topic=topicMatch.matches(data)
+//    val string=JJSON.get().formatJSONObject(data);
+//    producer.send(string,topic)
 
     produce(data)
 

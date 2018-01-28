@@ -1,6 +1,7 @@
 package me.libme.rec.receiver.web;
 
 import me.libme.rec.RecApplication;
+import me.libme.rec.cluster.Cluster;
 import me.libme.rec.receiver.QueueHolder;
 import me.libme.rec.receiver.RecProcessor;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.stereotype.Component;
+import scalalg.me.libme.rec.RecRuntime;
+import scalalg.me.libme.rec.RecRuntime$;
 
 /**
  * Created by J on 2018/1/20.
@@ -61,6 +64,17 @@ public class DefaultStarterComponent implements ApplicationListener<ContextRefre
                 .setArgs(RecApplication.args)
                 .setQueueHolder(queueHolder)
                 .build().start();
+
+
+        RecRuntime recRuntime=RecRuntime.builder().getOrCreate();
+        if(recRuntime.isCluster()){
+            Cluster cluster=new Cluster(RecApplication.args);
+            try {
+                cluster.start();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
 
     }
 

@@ -75,6 +75,17 @@
             <version>1.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>libme.modules</groupId>
+            <artifactId>ny-server</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>libme.modules</groupId>
+            <artifactId>ny-client</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
 
 
