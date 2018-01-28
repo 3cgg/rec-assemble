@@ -55,7 +55,7 @@ public class NettyServer implements OpenResource ,CloseResource {
         });
 
         Map<String,Object> config = JJSON.get().parse(JStringUtils.utf8(JIOUtils.getBytes(
-                Thread.currentThread().getContextClassLoader().getResourceAsStream("rec-assemble.json"))));
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("path-listener.json"))));
 
         config.forEach((key,value)->{
             PathListener object;
