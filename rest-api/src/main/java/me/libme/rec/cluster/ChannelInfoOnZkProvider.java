@@ -6,6 +6,8 @@ import me.libme.kernel._c.json.JJSON;
 import me.libme.kernel._c.util.JStringUtils;
 import me.libme.module.zookeeper.ZooKeeperConnector;
 import me.libme.module.zookeeper.fn.ls.NodeMeta;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scalalg.me.libme.rec.RecRuntime;
 
 import java.util.concurrent.Executors;
@@ -18,6 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.SimpleChannelExecutorProvider {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(ChannelInfoOnZkProvider.class);
+
 
     private final String path;
 
@@ -27,7 +31,7 @@ public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.Sim
 
     private final Lock lock=new ReentrantLock();
 
-    private boolean openLock;
+    private AtomicReference<Boolean> openLock=new AtomicReference<>(false);
 
     public ChannelInfoOnZkProvider(String path,ZooKeeperConnector.ZookeeperExecutor executor) {
         this.path = path;
@@ -36,7 +40,7 @@ public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.Sim
 
             try{
                 lock.lock();
-                openLock=true; // !important
+                openLock.set(true); // !important
                 NodeMeta nodeMeta= JJSON.get().parse(JStringUtils.utf8(zooNode.getData()),NodeMeta.class);
 
                 String ip=nodeMeta.getIp();
@@ -44,8 +48,11 @@ public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.Sim
 
                 SimpleChannelExecutor simpleChannelExecutor=new SimpleChannelExecutor(ip,serverPort);
                 channelExecutor.set(simpleChannelExecutor);
+            }catch (Exception e){
+                LOGGER.error(e.getMessage(),e);
+                System.exit(-1);
             }finally {
-                openLock=false; // !important
+                openLock.set(false); // !important
                 lock.unlock();
 
             }
@@ -59,7 +66,7 @@ public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.Sim
     @Override
     public SimpleChannelExecutor provider() {
 
-        if(openLock){
+        if(openLock.get()){
             try{
                 lock.lock();
             }finally {

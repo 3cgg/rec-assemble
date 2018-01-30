@@ -31,6 +31,18 @@ import scalalg.me.libme.module.hbase.HBaseConnector
     cliParams.get().getInt("--rec.netty.port")
   }
 
+  def u2iTable():String={
+    cliParams.get().getString("--rec.u2i.hbase.table")
+  }
+
+  def u2iFamily():String={
+    cliParams.get().getString("--rec.u2i.hbase.table.family")
+  }
+
+  def u2iColumn():String={
+    cliParams.get().getString("--rec.u2i.hbase.table.column")
+  }
+
 
 }
 object RecRuntime{

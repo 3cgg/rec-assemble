@@ -21,5 +21,9 @@
 
 
   "--rec.netty.host":"127.0.0.1",
-  "--rec.netty.port":10089
+  "--rec.netty.port":10089,
+
+  "--rec.u2i.hbase.table":"u2itable",
+  "--rec.u2i.hbase.table.family":"info",
+  "--rec.u2i.hbase.table.column":"intMark"
 }

@@ -1,10 +1,12 @@
 package me.libme.rec.cluster;
 
+import me.libme.fn.netty.server.fn._dispatch.PathListenerInitializeQueue;
 import me.libme.kernel._c.util.CliParams;
 import me.libme.module.zookeeper.ZooKeeperConnector;
 import me.libme.module.zookeeper.fn.ls.LeaderConfig;
 import me.libme.module.zookeeper.fn.ls.LeaderNodeRegister;
 import me.libme.module.zookeeper.fn.ls.NodeLeader;
+import me.libme.module.zookeeper.fn.ls.OpenResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scalalg.me.libme.rec.RecRuntime;
@@ -46,6 +48,17 @@ public class Cluster {
                 .executor(executor)
                 .addOpenResource(leaderNodeRegister)
                 .addOpenResource(nettyServer)
+                .addOpenResource(new OpenResource() {
+                    @Override
+                    public void open(NodeLeader nodeLeader) throws Exception {
+                        PathListenerInitializeQueue.get().allInitialize();
+                    }
+
+                    @Override
+                    public String name() {
+                        return "Initialize Path Listener Object...";
+                    }
+                })
 //                .addCloseResource(leaderNodeRegister)  //comment,avoid removing the path another node register itself
                 .addCloseResource(nettyServer)
                 .build();

@@ -27,9 +27,17 @@ public class HBaseRepo implements Unique2IntRepo {
     }
 
     @Override
-    public void initialize(JCacheService<String, Integer> cacheService) {
+    public Integer initialize(JCacheService<String, Integer> cacheService) {
         Map<String, String> data= hBaseExecutor.queryOperations().scan(tableName,family,intMark);
-        data.forEach((key,value)->cacheService.put(key,Integer.valueOf(value)));
+        int max=0;
+        for(Map.Entry<String,String> entry:data.entrySet()){
+            String key=entry.getKey();
+            String value=entry.getValue();
+            Integer intMark=Integer.valueOf(value);
+            cacheService.put(key,intMark);
+            max=Math.max(max,intMark);
+        }
+        return max;
     }
 
 
