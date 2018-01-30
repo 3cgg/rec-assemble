@@ -27,6 +27,11 @@ import scalalg.me.libme.module.hbase.HBaseConnector
     cliParams.get().getBoolean("--rec.cluster")
   }
 
+  def serverPort():Int={
+    cliParams.get().getInt("--rec.netty.port")
+  }
+
+
 }
 object RecRuntime{
 

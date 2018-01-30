@@ -64,6 +64,7 @@ public class NettyServer implements OpenResource ,CloseResource {
             } catch (Throwable e) {
                 throw new IllegalStateException(e);
             }
+            LOGGER.info(value +" listen on "+key);
             dispatcher.register(key,object);
         });
 
