@@ -18,4 +18,6 @@ public interface Unique2IntRepo {
 
     void remove(String key);
 
+    Integer get(String key);
+
 }

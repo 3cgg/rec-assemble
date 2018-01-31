@@ -55,6 +55,7 @@ public class RecProcessor {
         }
 
         if(recProcessorBuilder.persistHbase){
+            windowBuilder.addConsumer(new Unique2Int());
             HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Plus$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
                     DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$);
             windowBuilder.addConsumer(hBasePersist);

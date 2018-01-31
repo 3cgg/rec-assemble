@@ -1,13 +1,14 @@
 package scalalg.me.libme.rec
 
-import me.libme.kernel._c.json.JJSON
+import me.libme.rec.cluster.PathListenerClientFactory
+import me.libme.rec.cluster._trait.Unique2IntMark
 import me.libme.rec.receiver.model.TrackData
 import me.libme.xstream.{Compositer, FlexTupe, Tupe}
 
 /**
   * Created by J on 2018/1/26.
   */
-class UniqueConverter extends Compositer{
+class Unique2Int extends Compositer{
 
 
   var _flexTupe :FlexTupe = null
@@ -47,9 +48,17 @@ class UniqueConverter extends Compositer{
       data= classOf[TrackData].cast(tupe.next())
     }
 
-//    val topic=topicMatch.matches(data)
-//    val string=JJSON.get().formatJSONObject(data);
-//    producer.send(string,topic)
+
+    val unique2IntMark:Unique2IntMark =PathListenerClientFactory.factory(classOf[Unique2IntMark],Unique2IntMark.PATH)
+
+    val userId=data.getUserItemRecord.getUserId
+    val itemId=data.getUserItemRecord.getItemId
+
+    val intUserId=unique2IntMark.unique(userId,null)
+    val intItemId=unique2IntMark.unique(itemId,null)
+
+    data.getUserItemRecord.setUserId(String.valueOf(intUserId))
+    data.getUserItemRecord.setItemId(String.valueOf(intItemId))
 
     produce(data)
 

@@ -1,6 +1,7 @@
 package me.libme.rec.fn.u2i;
 
 import me.libme.kernel._c.cache.JCacheService;
+import me.libme.kernel._c.util.JStringUtils;
 import scalalg.me.libme.module.hbase.HBaseConnector;
 
 import java.util.Map;
@@ -50,4 +51,13 @@ public class HBaseRepo implements Unique2IntRepo {
     public void remove(String key) {
         hBaseExecutor.columnOperations().delete(tableName,family,intMark,key);
     }
+
+
+    @Override
+    public Integer get(String key) {
+        String value=hBaseExecutor.columnOperations().get(tableName,family,intMark,key);
+        return JStringUtils.isNullOrEmpty(value)?null:Integer.valueOf(value);
+    }
+
+
 }
