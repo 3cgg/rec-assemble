@@ -18,6 +18,11 @@ import org.springframework.stereotype.Component;
 import scalalg.me.libme.rec.RecRuntime;
 import scalalg.me.libme.rec.RecRuntime$;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+
 /**
  * Created by J on 2018/1/20.
  */
@@ -57,12 +62,26 @@ public class DefaultStarterComponent implements ApplicationListener<ContextRefre
     private QueueHolder queueHolder;
 
 
+
+    private ScheduledExecutorService windowExecutor= Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r,"window-topology-scheduler-receiver");
+        }
+    });
+
+    private ExecutorService executor=Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),
+            r->new Thread(r,"real thread on executing topology receiver"));
+
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         RecProcessor.builder()
                 .setArgs(RecApplication.args)
                 .setQueueHolder(queueHolder)
+                .windowExecutor(windowExecutor)
+                .executor(executor)
                 .build().start();
 
 

@@ -43,6 +43,11 @@ import scalalg.me.libme.module.hbase.HBaseConnector
     cliParams.get().getString("--rec.u2i.hbase.table.column")
   }
 
+  def allParam():util.Map[String,Object]={
+    util.Collections.unmodifiableMap(cliParams.get().toMap)
+  }
+
+
 
 }
 object RecRuntime{

@@ -35,7 +35,7 @@ public class Cluster {
         LeaderConfig conf=new LeaderConfig();
         conf.setBasePath(ClusterZkPaths.BASE_PATH);
         conf.setName("Cluster");
-        new CliParams(args).toMap().forEach((key,value)->conf.put(key,value));
+        recRuntime.allParam().forEach((key,value)->conf.put(key,value));
 
         // leader register
         LeaderNodeRegister leaderNodeRegister=new LeaderNodeRegister("Leader Register",ClusterZkPaths.LEADER_INFO_PATH,executor);

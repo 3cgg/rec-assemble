@@ -20,7 +20,7 @@
   "--hbase.zk.connectString":"one.3cgg.rec",
 
 
-  "--rec.netty.host":"127.0.0.1",
+  "--rec.netty.host":"0.0.0.0",
   "--rec.netty.port":10089,
 
   "--rec.u2i.hbase.table":"u2itable",

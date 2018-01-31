@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scalalg.me.libme.rec.RecRuntime;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -34,33 +35,33 @@ public class ChannelInfoOnZkProvider implements DynamicClientChannelExecutor.Sim
     private AtomicReference<Boolean> openLock=new AtomicReference<>(false);
 
     public ChannelInfoOnZkProvider(String path,ZooKeeperConnector.ZookeeperExecutor executor) {
+        ExecutorService executorService=Executors.newSingleThreadExecutor(r -> new Thread(r,"Leader-Channel-Watcher"));
         this.path = path;
         this.executor=executor;
-        this.executor.watchPath(this.path,zooNode -> {
+        connect(JJSON.get().parse(JStringUtils.utf8(this.executor.getPath(this.path)),NodeMeta.class));
+        this.executor.watchPath(this.path,zooNode -> connect(JJSON.get().parse(JStringUtils.utf8(zooNode.getData()),NodeMeta.class)), executorService);
 
-            try{
-                lock.lock();
-                openLock.set(true); // !important
-                NodeMeta nodeMeta= JJSON.get().parse(JStringUtils.utf8(zooNode.getData()),NodeMeta.class);
-
-                String ip=nodeMeta.getIp();
-                int serverPort=RecRuntime.builder().getOrCreate().serverPort();
-
-                SimpleChannelExecutor simpleChannelExecutor=new SimpleChannelExecutor(ip,serverPort);
-                channelExecutor.set(simpleChannelExecutor);
-            }catch (Exception e){
-                LOGGER.error(e.getMessage(),e);
-                System.exit(-1);
-            }finally {
-                openLock.set(false); // !important
-                lock.unlock();
-
-            }
-
-        }, Executors.newSingleThreadExecutor(r -> new Thread(r,"Leader-Channel-Watcher")));
     }
 
+    private void connect(NodeMeta nodeMeta) {
+        try{
+            lock.lock();
+            openLock.set(true); // !important
 
+            String ip=nodeMeta.getIp();
+            int serverPort= RecRuntime.builder().getOrCreate().serverPort();
+
+            SimpleChannelExecutor simpleChannelExecutor=new SimpleChannelExecutor(ip,serverPort);
+            channelExecutor.set(simpleChannelExecutor);
+        }catch (Exception e){
+            LOGGER.error(e.getMessage(),e);
+            System.exit(-1);
+        }finally {
+            openLock.set(false); // !important
+            lock.unlock();
+
+        }
+    }
 
 
     @Override

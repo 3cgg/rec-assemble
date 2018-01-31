@@ -9,6 +9,8 @@ import scalalg.me.libme.rec.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by J on 2018/1/20.
@@ -46,6 +48,8 @@ public class RecProcessor {
         WindowTopology.WindowBuilder windowBuilder=WindowTopology.builder().setName("Track Data Topology")
                 .setCount(recProcessorBuilder.count)
                 .setTime(recProcessorBuilder.time)
+                .windowExecutor(recProcessorBuilder.windowExecutor)
+                .executor(recProcessorBuilder.executor)
                 .setSourcer(queueWindowSourcer);
 
         if(recProcessorBuilder.persistKafka) {
@@ -87,6 +91,32 @@ public class RecProcessor {
         boolean persistKafka=true;
 
         boolean persistHbase=true;
+
+
+        private ScheduledExecutorService windowExecutor;
+
+        private ExecutorService executor;
+
+        /**
+         * !important / micro-batch
+         * @param windowExecutor
+         * @return
+         */
+        public RecProcessorBuilder windowExecutor(ScheduledExecutorService windowExecutor) {
+            this.windowExecutor = windowExecutor;
+            return this;
+        }
+
+        /**
+         * !important / executing thread pool
+         * @param executor
+         * @return
+         */
+        public RecProcessorBuilder executor(ExecutorService executor) {
+            this.executor = executor;
+            return this;
+        }
+
 
         public RecProcessorBuilder setQueueHolder(QueueHolder queueHolder) {
             this.queueHolder = queueHolder;
