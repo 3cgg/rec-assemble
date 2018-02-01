@@ -35,18 +35,6 @@ public class NettyServer implements OpenResource ,CloseResource {
 
     private RecNettyConfigParser recNettyConfigParser=new RecNettyConfigParser();
 
-
-    private ScheduledExecutorService windowExecutor= Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(r,"window-topology-scheduler-netty");
-        }
-    });
-
-    private ExecutorService executor=Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),
-            r->new Thread(r,"real thread on executing topology netty"));
-
-
     @Override
     public void close(NodeLeader nodeLeader) throws IOException {
         channelServer.close();
@@ -83,6 +71,17 @@ public class NettyServer implements OpenResource ,CloseResource {
             LOGGER.info(value +" listen on "+key);
             dispatcher.register(key,object);
         });
+
+        ScheduledExecutorService windowExecutor= Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors(), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r,"window-topology-scheduler-netty");
+            }
+        });
+
+        ExecutorService executor=Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(),
+                r->new Thread(r,"real thread on executing topology netty"));
+
 
         // START SERVER
         channelServer =

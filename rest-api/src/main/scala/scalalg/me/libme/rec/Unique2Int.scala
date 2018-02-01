@@ -1,7 +1,6 @@
 package scalalg.me.libme.rec
 
-import me.libme.rec.cluster.PathListenerClientFactory
-import me.libme.rec.cluster._trait.Unique2IntMark
+import me.libme.rec.fn.u2i.ReadOnlyU2I
 import me.libme.rec.receiver.model.TrackData
 import me.libme.xstream.{Compositer, FlexTupe, Tupe}
 
@@ -49,13 +48,13 @@ class Unique2Int extends Compositer{
     }
 
 
-    val unique2IntMark:Unique2IntMark =PathListenerClientFactory.factory(classOf[Unique2IntMark],Unique2IntMark.PATH)
+    val unique2IntMark:ReadOnlyU2I =ReadOnlyU2I.get();
 
     val userId=data.getUserItemRecord.getUserId
     val itemId=data.getUserItemRecord.getItemId
 
-    val intUserId=unique2IntMark.unique(userId,null)
-    val intItemId=unique2IntMark.unique(itemId,null)
+    val intUserId=unique2IntMark.toInt(userId)
+    val intItemId=unique2IntMark.toInt(itemId)
 
     data.getUserItemRecord.setUserId(String.valueOf(intUserId))
     data.getUserItemRecord.setItemId(String.valueOf(intItemId))
