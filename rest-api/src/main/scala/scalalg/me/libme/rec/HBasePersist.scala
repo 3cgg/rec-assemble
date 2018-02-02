@@ -2,7 +2,7 @@ package scalalg.me.libme.rec
 
 import me.libme.kernel._c.json.JJSON
 import me.libme.rec.receiver.model.{CellData, TrackData}
-import me.libme.xstream.{Compositer, FlexTupe, Tupe}
+import me.libme.xstream.{Compositer, Tupe, TupeContext}
 
 import scalalg.me.libme.module.hbase.HBaseConnector
 
@@ -12,37 +12,15 @@ import scalalg.me.libme.module.hbase.HBaseConnector
 class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,tableMatch: TableMatch,columnFamilyMatch: ColumnFamilyMatch,countEval: CountEval) extends Compositer{
 
 
-  var _flexTupe :FlexTupe = null
-
-  var _markerTupe:FlexTupe = null
-
-  var _exceptionTupe:FlexTupe = null
-
   override def prepare(tupe: Tupe): Unit ={
     super.prepare(tupe)
-    _flexTupe=new FlexTupe
-    _markerTupe=new FlexTupe
-    _exceptionTupe=new FlexTupe
+  }
+
+  override def _finally(tupe: Tupe, tupeContext: TupeContext): Unit = {
 
   }
 
-  override def exceptionTupe(): FlexTupe = {
-    return _exceptionTupe
-  }
-
-  override def markerTupe(): FlexTupe = {
-    return _markerTupe
-  }
-
-  override def _finally(tupe: Tupe): Unit = {
-
-  }
-
-  override def flexTupe(): FlexTupe = {
-    return _flexTupe
-  }
-
-  override def doConsume(tupe: Tupe): Unit = {
+  override def doConsume(tupe: Tupe, tupeContext: TupeContext): Unit = {
 
     var data:TrackData=null
     if(tupe.hasNext){
@@ -68,11 +46,11 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
     //calculate the final original rating
     executor.columnOperations.insert(tableName,columnFamily,column,row,JJSON.get().format(oneRating))
 
-    produce(data)
+    tupeContext.produce(data)
 
   }
 
-  override def complete(tupe: Tupe): Unit = {
+  override def complete(tupe: Tupe, tupeContext: TupeContext): Unit = {
 
   }
 

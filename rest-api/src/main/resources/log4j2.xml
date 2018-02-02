@@ -12,19 +12,23 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="test" level="DEBUG" additivity="false">
+        <Logger name="test" level="info" additivity="false">
             <AppenderRef ref="appConsole"/>
         </Logger>
-        <Logger name="me.libme" level="DEBUG" additivity="false">
+        <Logger name="me.libme" level="info" additivity="false">
             <AppenderRef ref="appConsole"/>
         </Logger>
-        <Logger name="org" level="DEBUG" additivity="false">
+        <Logger name="org" level="info" additivity="false">
+            <AppenderRef ref="appConsole"/>
+        </Logger>
+
+        <Logger name="me.libme.webseed.fn.urltrack.UrlStorage" level="error" additivity="false">
             <AppenderRef ref="appConsole"/>
         </Logger>
 
         <!-- 根logger的设置-->
         <root>
-            <level value ="DEBUG"/>
+            <level value ="info"/>
             <appender-ref ref="appConsole"/>
         </root>
 
