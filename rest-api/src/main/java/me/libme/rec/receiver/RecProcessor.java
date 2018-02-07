@@ -54,14 +54,18 @@ public class RecProcessor {
 
         if(recProcessorBuilder.persistKafka) {
             TopicMatch topicMatch=recProcessorBuilder.topicMatch;
-            kafkaPersist kafkaPersist = new kafkaPersist(simpleProducer, topicMatch);
+            ConsumerMeta consumerMeta=new ConsumerMeta();
+            consumerMeta.setName("Kafka Persist");
+            kafkaPersist kafkaPersist = new kafkaPersist(simpleProducer, topicMatch,consumerMeta);
             windowBuilder.addConsumer(kafkaPersist);
         }
 
         if(recProcessorBuilder.persistHbase){
-            windowBuilder.addConsumer(new Unique2Int());
+            ConsumerMeta consumerMeta=new ConsumerMeta();
+            consumerMeta.setName("HBase Persist");
+            windowBuilder.addConsumer(new Unique2Int(new ConsumerMeta("Unique2Int")));
             HBasePersist hBasePersist=new HBasePersist(hbaseExecutor, Plus$.MODULE$,DefaultConfig._TableMatch$.MODULE$,
-                    DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$);
+                    DefaultConfig._ColumnFamilyMatch$.MODULE$,DefaultConfig._CountEval$.MODULE$,consumerMeta);
             windowBuilder.addConsumer(hBasePersist);
         }
 

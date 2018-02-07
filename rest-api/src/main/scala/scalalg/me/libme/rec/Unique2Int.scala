@@ -1,27 +1,30 @@
 package scalalg.me.libme.rec
 
+import java.util
+
 import me.libme.rec.fn.u2i.ReadOnlyU2I
 import me.libme.rec.receiver.model.TrackData
-import me.libme.xstream.{Compositer, Tupe, TupeContext}
+import me.libme.xstream.{Compositer, ConsumerMeta, Tupe}
 
 /**
   * Created by J on 2018/1/26.
   */
-class Unique2Int extends Compositer{
+class Unique2Int(consumerMeta: ConsumerMeta) extends Compositer(consumerMeta: ConsumerMeta){
 
-  override def prepare(tupe: Tupe): Unit ={
+  override def prepare(tupe: Tupe[_]): Unit ={
     super.prepare(tupe)
   }
 
-  override def _finally(tupe: Tupe, tupeContext: TupeContext): Unit = {
+  override def _finally(tupe: Tupe[_]): Unit = {
 
   }
 
-  override def doConsume(tupe: Tupe, tupeContext: TupeContext): Unit = {
+  override def doConsume(tupe: Tupe[_]): Unit = {
 
     var data:TrackData=null
-    if(tupe.hasNext){
-      data= classOf[TrackData].cast(tupe.next())
+    val iterator:util.Iterator[_]=tupe.iterator()
+    if(iterator.hasNext){
+      data= classOf[TrackData].cast(iterator.next())
     }
 
 
@@ -36,11 +39,11 @@ class Unique2Int extends Compositer{
     data.getUserItemRecord.setUserId(String.valueOf(intUserId))
     data.getUserItemRecord.setItemId(String.valueOf(intItemId))
 
-    tupeContext.produce(data)
+    produce(data)
 
   }
 
-  override def complete(tupe: Tupe, tupeContext: TupeContext): Unit = {
+  override def complete(tupe: Tupe[_]): Unit = {
 
   }
 
