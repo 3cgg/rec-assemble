@@ -1,6 +1,8 @@
 {
 
   "--rec.cluster":true,
+  "--rec.hbase":false,
+  "--rec.kafka":false,
 
   "--zk.namespace":"rec-system",
   "--zk.connectString":"one.3cgg.rec",

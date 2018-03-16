@@ -27,6 +27,14 @@ import scalalg.me.libme.module.hbase.HBaseConnector
     cliParams.get().getBoolean("--rec.cluster")
   }
 
+  def isHBase():Boolean={
+    cliParams.get().getBoolean("--rec.hbase")
+  }
+
+  def isKafka():Boolean={
+    cliParams.get().getBoolean("--rec.kafka")
+  }
+
   def serverPort():Int={
     cliParams.get().getInt("--rec.netty.port")
   }
@@ -88,22 +96,25 @@ object RecRuntime{
         if (!cliParams.contains(entry.getKey)) cliParams = cliParams.append(entry.getKey, entry.getValue)
       }
 
-      //kafka
-      val producerExecutor = Util.producerExecutor(cliParams)
+      val recRuntime=new RecRuntime
+      recRuntime.cliParams.set(cliParams)
 
       //zookeeper
       val zookeeperExecutor = Util.zookeeper(cliParams)
+      recRuntime.zookeeperExecutor.set(zookeeperExecutor)
+
+      //kafka
+      if(recRuntime.isKafka()){
+        val producerExecutor = Util.producerExecutor(cliParams)
+        recRuntime.producerExecutor.set(producerExecutor)
+      }
 
       //hbase
-      val hbaseExecutor = Util.hbase(cliParams)
+      if(recRuntime.isHBase()){
+        val hbaseExecutor = Util.hbase(cliParams)
+        recRuntime.hbaseExecutor.set(hbaseExecutor)
+      }
 
-      val recRuntime=new RecRuntime
-
-      recRuntime.zookeeperExecutor.set(zookeeperExecutor)
-      recRuntime.hbaseExecutor.set(hbaseExecutor)
-      recRuntime.producerExecutor.set(producerExecutor)
-
-      recRuntime.cliParams.set(cliParams)
       defaultSession.set(recRuntime)
 
       return recRuntime
