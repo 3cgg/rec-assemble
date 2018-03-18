@@ -27,7 +27,7 @@ import scalalg.me.libme.module.hbase.HBaseConnector
 
 
   def isCluster():Boolean={
-    cliParams.get().getBoolean("--rec.cluster")
+    basicClsRuntime.get().isCluster()
   }
 
   def isHBase():Boolean={
@@ -35,11 +35,7 @@ import scalalg.me.libme.module.hbase.HBaseConnector
   }
 
   def isKafka():Boolean={
-    cliParams.get().getBoolean("--rec.kafka")
-  }
-
-  def serverPort():Int={
-    cliParams.get().getInt("--rec.netty.port")
+    basicClsRuntime.get().isKafka()
   }
 
   def u2iTable():String={

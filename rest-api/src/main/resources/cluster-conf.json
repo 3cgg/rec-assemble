@@ -1,7 +1,7 @@
 {
 
   "--cls.cluster":true,
-  "--cls.kafka":false,
+  "--cls.kafka":true,
 
   "--zk.namespace":"rec-system",
   "--zk.connectString":"one.3cgg.rec",

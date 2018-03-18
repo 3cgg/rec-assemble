@@ -4,6 +4,7 @@ import java.util
 
 import me.libme.rec.fn.u2i.ReadOnlyU2I
 import me.libme.rec.receiver.model.TrackData
+import me.libme.xstream.EntryTupe.Entry
 import me.libme.xstream.{Compositer, ConsumerMeta, Tupe}
 
 /**
@@ -24,7 +25,9 @@ class Unique2Int(consumerMeta: ConsumerMeta) extends Compositer(consumerMeta: Co
     var data:TrackData=null
     val iterator:util.Iterator[_]=tupe.iterator()
     if(iterator.hasNext){
-      data= classOf[TrackData].cast(iterator.next())
+      data= classOf[TrackData].cast(
+        classOf[Entry].cast(iterator.next()).getValue
+        )
     }
 
 
@@ -39,7 +42,6 @@ class Unique2Int(consumerMeta: ConsumerMeta) extends Compositer(consumerMeta: Co
     data.getUserItemRecord.setUserId(String.valueOf(intUserId))
     data.getUserItemRecord.setItemId(String.valueOf(intItemId))
 
-    produce(data)
 
   }
 

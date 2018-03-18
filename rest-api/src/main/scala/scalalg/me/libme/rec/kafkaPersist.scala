@@ -5,6 +5,7 @@ import java.util
 import me.libme.kernel._c.json.JJSON
 import me.libme.module.kafka.SimpleProducer
 import me.libme.rec.receiver.model.TrackData
+import me.libme.xstream.EntryTupe.Entry
 import me.libme.xstream.{Compositer, ConsumerMeta, Tupe}
 
 /**
@@ -25,14 +26,14 @@ class kafkaPersist(producer :SimpleProducer, topicMatch: TopicMatch,consumerMeta
     var data:TrackData=null
     val iterator:util.Iterator[_]=tupe.iterator()
     if(iterator.hasNext){
-      data= classOf[TrackData].cast(iterator.next())
+      data= classOf[TrackData].cast(
+        classOf[Entry].cast(iterator.next()).getValue
+      )
     }
 
     val topic=topicMatch.matches(data)
     val string=JJSON.get().formatJSONObject(data);
     producer.send(string,topic)
-
-    produce(data)
 
   }
 

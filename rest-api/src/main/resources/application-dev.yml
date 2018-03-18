@@ -5,7 +5,7 @@ spring :
          driver-class-name : com.mysql.jdbc.Driver
          url : jdbc:mysql://localhost:3306/webseed?useUnicode=true&characterEncoding=utf8&useSSL=false
          username : root
-         password : #jiazhongjin
+         password : jiazhongjin
          #driver-class-name : org.h2.Driver
          #url : jdbc:h2:file:C:/h2data/webseed
          #username : sa
@@ -91,10 +91,10 @@ cpp :
     user :
          default-password : 11111
     file : 
-         dsk-path : D:/file-store/   #simple file directory
+         dsk-path : C:/file-store/   #simple file directory
          host : http://localhost/ #IP地址 指定文件存储的地址
     temp-file :
-         temp-dsk-path : D:/temp-file-store/   #simple file directory
+         temp-dsk-path : C:/temp-file-store/   #simple file directory
          temp-host : http://localhost:9898/ #IP地址 指定文件存储的地址
     url :
          method-track-switch : true #true is on , false is off
@@ -114,7 +114,7 @@ cpp :
               - me.libme  # never set *
               - me.libme
     ueditor :
-         root-path : D:/file-store-ueditor/   #simple file directory
+         root-path : C:/file-store-ueditor/   #simple file directory
          host : http://localhost:8901/ #IP地址 指定文件存储的地址
     rec:
         default.starter.switch : true

@@ -1,6 +1,6 @@
 {
 
-  "--rec.hbase":false,
+  "--rec.hbase":true,
 
   "--hbase.zk.connectString":"one.3cgg.rec",
 

@@ -4,6 +4,7 @@ import java.util
 
 import me.libme.kernel._c.json.JJSON
 import me.libme.rec.receiver.model.{CellData, TrackData}
+import me.libme.xstream.EntryTupe.Entry
 import me.libme.xstream.{Compositer, ConsumerMeta, Tupe}
 
 import scalalg.me.libme.module.hbase.HBaseConnector
@@ -27,7 +28,9 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
     var data:TrackData=null
     val iterator:util.Iterator[_]=tupe.iterator()
     if(iterator.hasNext){
-      data= classOf[TrackData].cast(iterator.next())
+      data= classOf[TrackData].cast(
+        classOf[Entry].cast(iterator.next()).getValue
+      )
     }
 
     val row=data.getUserItemRecord.getUserId
@@ -49,7 +52,6 @@ class HBasePersist(executor:HBaseConnector#HBaseExecutor, algorithm: Algorithm,t
     //calculate the final original rating
     executor.columnOperations.insert(tableName,columnFamily,column,row,JJSON.get().format(oneRating))
 
-    produce(data)
 
   }
 

@@ -1,7 +1,7 @@
 {
 
-  "/demo/time" : "me.libme.rec.cluster._trait.TimeGetDemo",
-  "/api/unique2int" : "me.libme.rec.cluster._trait.Unique2IntMarkImpl"
+  "/demo/time" : "me.libme.cls.cluster._trait.TimeGetDemo",
+  "/api/unique2int" : "me.libme.rec._trait.Unique2IntMarkImpl"
 
 
 }
