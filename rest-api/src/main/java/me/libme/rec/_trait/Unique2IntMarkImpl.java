@@ -1,4 +1,4 @@
-package me.libme.rec.cluster._trait;
+package me.libme.rec._trait;
 
 import me.libme.fn.netty.server.HttpRequest;
 import me.libme.fn.netty.server.fn._dispatch.PathListenerInitializeQueue;

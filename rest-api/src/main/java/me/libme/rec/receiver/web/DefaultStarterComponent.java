@@ -1,7 +1,7 @@
 package me.libme.rec.receiver.web;
 
+import me.libme.cls.cluster.Cluster;
 import me.libme.rec.RecApplication;
-import me.libme.rec.cluster.Cluster;
 import me.libme.rec.receiver.QueueHolder;
 import me.libme.rec.receiver.RecProcessor;
 import org.slf4j.Logger;
@@ -16,7 +16,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.stereotype.Component;
 import scalalg.me.libme.rec.RecRuntime;
-import scalalg.me.libme.rec.RecRuntime$;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

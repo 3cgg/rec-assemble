@@ -1,29 +1,13 @@
 {
 
-  "--rec.cluster":true,
   "--rec.hbase":false,
-  "--rec.kafka":false,
 
-  "--zk.namespace":"rec-system",
-  "--zk.connectString":"one.3cgg.rec",
-
+  "--hbase.zk.connectString":"one.3cgg.rec",
 
   "--rec.eval.count.click":1,
   "--rec.eval.count.browser":0.3,
   "--rec.table.name":"userItem",
   "--rec.table.column.family":"item",
-
-  "bootstrap.servers":"one.3cgg.rec:9092",
-  "key.serializer":"org.apache.kafka.common.serialization.StringSerializer",
-  "value.serializer":"org.apache.kafka.common.serialization.StringSerializer",
-  "value.deserializer":"org.apache.kafka.common.serialization.StringDeserializer",
-
-
-  "--hbase.zk.connectString":"one.3cgg.rec",
-
-
-  "--rec.netty.host":"0.0.0.0",
-  "--rec.netty.port":10089,
 
   "--rec.u2i.hbase.table":"u2itable",
   "--rec.u2i.hbase.table.family":"info",

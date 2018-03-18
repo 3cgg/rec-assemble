@@ -1,0 +1,18 @@
+{
+
+  "--cls.cluster":true,
+  "--cls.kafka":false,
+
+  "--zk.namespace":"rec-system",
+  "--zk.connectString":"one.3cgg.rec",
+
+
+  "bootstrap.servers":"one.3cgg.rec:9092",
+  "key.serializer":"org.apache.kafka.common.serialization.StringSerializer",
+  "value.serializer":"org.apache.kafka.common.serialization.StringSerializer",
+  "value.deserializer":"org.apache.kafka.common.serialization.StringDeserializer",
+
+  "--cls.master.netty.host":"0.0.0.0",
+  "--cls.master.netty.port":10089
+
+}

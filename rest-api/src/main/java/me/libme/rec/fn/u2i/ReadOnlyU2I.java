@@ -1,9 +1,9 @@
 package me.libme.rec.fn.u2i;
 
+import me.libme.cls.cluster.PathListenerClientFactory;
 import me.libme.kernel._c.cache.JCacheService;
 import me.libme.kernel._c.cache.JMapCacheService;
-import me.libme.rec.cluster.PathListenerClientFactory;
-import me.libme.rec.cluster._trait.Unique2IntMark;
+import me.libme.rec._trait.Unique2IntMark;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scalalg.me.libme.rec.RecRuntime;

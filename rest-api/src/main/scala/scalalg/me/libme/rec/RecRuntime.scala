@@ -7,6 +7,7 @@ import me.libme.kernel._c.util.CliParams
 import me.libme.module.kafka.ProducerConnector
 import me.libme.module.zookeeper.ZooKeeperConnector
 
+import scalalg.me.libme.cls.BasicClsRuntime
 import scalalg.me.libme.module.hbase.HBaseConnector
 
 /**
@@ -14,6 +15,7 @@ import scalalg.me.libme.module.hbase.HBaseConnector
   */
  class RecRuntime private{
 
+  val basicClsRuntime=new AtomicReference[BasicClsRuntime]
 
   val zookeeperExecutor=new AtomicReference[ZooKeeperConnector#ZookeeperExecutor]
 
@@ -22,6 +24,7 @@ import scalalg.me.libme.module.hbase.HBaseConnector
   val producerExecutor=new AtomicReference[ProducerConnector#ProducerExecutor[String,String]]
 
   private val cliParams=new AtomicReference[CliParams]
+
 
   def isCluster():Boolean={
     cliParams.get().getBoolean("--rec.cluster")
@@ -87,6 +90,10 @@ object RecRuntime{
         return defaultSession.get();
       }
 
+      //first we initialize basic cluster runtime environment...
+      val basicClsRuntime=BasicClsRuntime.builder().args(args)
+        .getOrCreate()
+
 
       val config: util.Map[String, AnyRef] = RecConfig.backend
 
@@ -98,20 +105,19 @@ object RecRuntime{
 
       val recRuntime=new RecRuntime
       recRuntime.cliParams.set(cliParams)
+      recRuntime.basicClsRuntime.set(basicClsRuntime)
 
       //zookeeper
-      val zookeeperExecutor = Util.zookeeper(cliParams)
-      recRuntime.zookeeperExecutor.set(zookeeperExecutor)
+      recRuntime.zookeeperExecutor.set(basicClsRuntime.zookeeperExecutor.get())
 
       //kafka
-      if(recRuntime.isKafka()){
-        val producerExecutor = Util.producerExecutor(cliParams)
-        recRuntime.producerExecutor.set(producerExecutor)
+      if(basicClsRuntime.isKafka()){
+        recRuntime.producerExecutor.set(basicClsRuntime.producerExecutor.get())
       }
 
       //hbase
       if(recRuntime.isHBase()){
-        val hbaseExecutor = Util.hbase(cliParams)
+        val hbaseExecutor = RecUtil.hbase(cliParams)
         recRuntime.hbaseExecutor.set(hbaseExecutor)
       }
 
